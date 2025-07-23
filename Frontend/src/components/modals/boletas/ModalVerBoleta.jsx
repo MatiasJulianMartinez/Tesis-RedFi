@@ -1,4 +1,4 @@
-import { IconX, IconEye, IconTrash, IconEdit } from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react";
 import MainButton from "../../ui/MainButton";
 import MainH2 from "../../ui/MainH2";
 import ModalContenedor from "../../ui/ModalContenedor";
@@ -68,6 +68,17 @@ const ModalVerBoleta = ({ boleta, onClose, boletaAnterior }) => {
               year: "numeric",
             })}
           </p>
+
+          {boleta.promo_hasta && (
+            <p className="text-yellow-400">
+              <strong>Promoción hasta:</strong>{" "}
+              {new Date(boleta.promo_hasta).toLocaleDateString("es-AR", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })}
+            </p>
+          )}
         </div>
 
         <div className="flex justify-center">

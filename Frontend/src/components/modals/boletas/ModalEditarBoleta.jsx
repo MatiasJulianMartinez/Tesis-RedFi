@@ -14,7 +14,11 @@ import { actualizarBoletaConImagen } from "../../../services/boletasService";
 import { useAlerta } from "../../../context/AlertaContext";
 
 const ModalEditarBoleta = ({ boleta, onClose, onActualizar }) => {
-  const [form, setForm] = useState({ ...boleta });
+  const [form, setForm] = useState({
+    ...boleta,
+    promoHasta: boleta.promo_hasta || "", // ✅ Nuevo campo
+  });
+
   const [archivoNuevo, setArchivoNuevo] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -41,9 +45,16 @@ const ModalEditarBoleta = ({ boleta, onClose, onActualizar }) => {
   const handleGuardarCambios = async () => {
     setLoading(true);
     try {
+      const formActualizado = {
+        ...form,
+        promo_hasta: form.promoHasta || null, // ✅ Renombramos para Supabase
+      };
+
+      delete formActualizado.promoHasta;
+
       await actualizarBoletaConImagen(
         boleta,
-        form,
+        formActualizado,
         archivoNuevo,
         imagenEliminada
       );
@@ -118,6 +129,17 @@ const ModalEditarBoleta = ({ boleta, onClose, onActualizar }) => {
           icon={IconCalendar}
         />
 
+        {/* ✅ Campo nuevo: Fin de promoción */}
+        <Input
+          name="promoHasta"
+          type="date"
+          value={form.promoHasta}
+          onChange={handleChange}
+          label="Fin de promoción (opcional)"
+          className="md:col-span-2"
+          icon={IconCalendar}
+        />
+
         {/* Imagen */}
         <div className="md:col-span-2 text-center">
           <FileInput
@@ -126,7 +148,7 @@ const ModalEditarBoleta = ({ boleta, onClose, onActualizar }) => {
             value={archivoNuevo}
             onChange={(file) => {
               setArchivoNuevo(file);
-              setImagenEliminada(false); // si elige una nueva, ya no es una eliminación
+              setImagenEliminada(false);
             }}
             previewUrl={preview}
             setPreviewUrl={setPreview}

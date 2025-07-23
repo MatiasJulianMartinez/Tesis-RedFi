@@ -52,14 +52,8 @@ const BoletaHistorial = ({ boletas, recargarBoletas }) => {
         <span className="text-center">{index + 1}</span>
       ),
     },
-    {
-      id: "proveedor",
-      label: "Proveedor",
-    },
-    {
-      id: "mes",
-      label: "Mes",
-    },
+    { id: "proveedor", label: "Proveedor" },
+    { id: "mes", label: "Mes" },
     {
       id: "monto",
       label: "Monto",
@@ -95,7 +89,23 @@ const BoletaHistorial = ({ boletas, recargarBoletas }) => {
         </div>
       ),
     },
-
+    {
+      id: "promo_hasta",
+      label: "Promoción",
+      renderCell: (b) =>
+        b.promo_hasta ? (
+          <div className="text-sm text-yellow-400">
+            Hasta{" "}
+            {new Date(b.promo_hasta).toLocaleDateString("es-AR", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </div>
+        ) : (
+          <span className="text-xs text-texto/40">—</span>
+        ),
+    },
     {
       id: "acciones",
       label: "Acciones",
@@ -196,16 +206,25 @@ const BoletaHistorial = ({ boletas, recargarBoletas }) => {
                 <p className="text-sm mb-1 flex items-center gap-2 text-texto/60">
                   <strong className="text-texto">Vencimiento:</strong>
                   <span>
-                    {new Date(b.vencimiento + "T12:00:00").toLocaleDateString(
-                      "es-AR",
-                      {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      }
-                    )}
+                    {new Date(
+                      b.vencimiento + "T12:00:00"
+                    ).toLocaleDateString("es-AR", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
                   </span>
                 </p>
+                {b.promo_hasta && (
+                  <p className="text-sm mb-1 text-yellow-400">
+                    <strong>Promoción hasta:</strong>{" "}
+                    {new Date(b.promo_hasta).toLocaleDateString("es-AR", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
+                )}
               </div>
             ))}
           </div>

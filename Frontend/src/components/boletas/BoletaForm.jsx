@@ -1,10 +1,9 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import MainButton from "../ui/MainButton";
 import MainH2 from "../ui/MainH2";
 import Input from "../ui/Input";
 import FileInput from "../ui/FileInput";
 import {
-  IconX,
   IconCalendar,
   IconCurrencyDollar,
   IconWifi,
@@ -27,6 +26,7 @@ const BoletaForm = ({
     monto: "",
     proveedor: "",
     vencimiento: "",
+    promoHasta: "", // ✅ camelCase en el frontend
   });
 
   const [archivo, setArchivo] = useState(null);
@@ -57,10 +57,18 @@ const BoletaForm = ({
         form.vencimiento + "T12:00:00"
       ).toISOString();
 
+      const promoHastaAjustado = form.promoHasta
+        ? new Date(form.promoHasta + "T12:00:00").toISOString()
+        : null;
+
       await guardarBoleta({
-        ...form,
+        mes: form.mes,
+        anio: form.anio,
+        monto: form.monto,
+        proveedor: form.proveedor,
         user_id: user.id,
         vencimiento: vencimientoAjustado,
+        promo_hasta: promoHastaAjustado, // ✅ snake_case para Supabase
         url_imagen,
       });
 
@@ -72,6 +80,7 @@ const BoletaForm = ({
         monto: "",
         proveedor: "",
         vencimiento: "",
+        promoHasta: "", // ✅ reset correcto
       });
       setArchivo(null);
       setPreviewUrl(null);
@@ -134,17 +143,25 @@ const BoletaForm = ({
             icon={IconWifi}
           />
 
-          <div className="md:col-span-2">
-            <Input
-              label="Fecha de vencimiento *"
-              name="vencimiento"
-              type="date"
-              value={form.vencimiento}
-              onChange={handleChange}
-              required
-              icon={IconCalendar}
-            />
-          </div>
+          <Input
+            label="Fecha de vencimiento *"
+            name="vencimiento"
+            type="date"
+            value={form.vencimiento}
+            onChange={handleChange}
+            required
+            icon={IconCalendar}
+          />
+
+          {/* ✅ Nuevo campo: promoHasta */}
+          <Input
+            label="Fin de promoción (opcional)"
+            name="promoHasta"
+            type="date"
+            value={form.promoHasta}
+            onChange={handleChange}
+            icon={IconCalendar}
+          />
 
           {/* Selector de imagen */}
           <div className="md:col-span-2 text-center">
