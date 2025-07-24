@@ -66,6 +66,7 @@ export const RoleProvider = ({ children }) => {
       value={{
         rol,
         plan,
+        setPlan, // ✅ agregado para que los componentes puedan actualizar el plan
         loadingRole,
         esAdmin,
         esUser,

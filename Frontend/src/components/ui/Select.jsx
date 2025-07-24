@@ -37,9 +37,11 @@ const Select = ({
                 e.target.selectedOptions,
                 (opt) => opt.value
               );
-              onChange(values);
+              // ✅ Pasar objeto similar a evento para múltiples
+              onChange({ target: { name: e.target.name, value: values } });
             } else {
-              onChange(e.target.value);
+              // ✅ Pasar evento completo como hace un input
+              onChange(e);
             }
           }}
           disabled={disabled || loading}

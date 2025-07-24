@@ -1,11 +1,12 @@
 import { useAuth } from "../context/AuthContext";
 import { useRole } from "../context/RoleContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { IconCheck } from "@tabler/icons-react";
 import MainH1 from "../components/ui/MainH1";
 import MainH2 from "../components/ui/MainH2";
 import MainButton from "../components/ui/MainButton";
 import MainLinkButton from "../components/ui/MainLinkButton";
+import ModalConfirmacionPlan from "../components/modals/boletas/ModalConfirmacionPlan";
 
 const beneficiosBasico = [
   { texto: "Acceso al mapa interactivo", disponible: true },
@@ -32,9 +33,17 @@ const Planes = () => {
   const { plan } = useRole();
   const planActual = plan || "basico";
 
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [planDestino, setPlanDestino] = useState("");
+
   useEffect(() => {
     document.title = "Red-Fi | Planes";
   }, []);
+
+  const abrirModalCambioPlan = (nuevo) => {
+    setPlanDestino(nuevo);
+    setMostrarModal(true);
+  };
 
   const renderBeneficios = (lista) => (
     <ul className="text-sm text-texto/80 space-y-2 mb-6 text-left">
@@ -80,9 +89,12 @@ const Planes = () => {
                 Este es tu plan actual
               </MainButton>
             ) : (
-              <MainLinkButton to="/cuenta" variant="primary">
-                Adquirir Plan
-              </MainLinkButton>
+              <MainButton
+                onClick={() => abrirModalCambioPlan("basico")}
+                className="px-6 py-3"
+              >
+                Cambiar a Básico
+              </MainButton>
             )}
           </div>
 
@@ -101,13 +113,24 @@ const Planes = () => {
                 Este es tu plan actual
               </MainButton>
             ) : (
-              <MainLinkButton to="/cuenta" variant="primary">
-                Adquirir Plan
-              </MainLinkButton>
+              <MainButton
+                onClick={() => abrirModalCambioPlan("premium")}
+                className="px-6 py-3"
+              >
+                Cambiar a Premium
+              </MainButton>
             )}
           </div>
         </div>
       </section>
+
+      {mostrarModal && (
+        <ModalConfirmacionPlan
+          usuarioId={usuario.id}
+          nuevoPlan={planDestino}
+          onClose={() => setMostrarModal(false)}
+        />
+      )}
     </div>
   );
 };

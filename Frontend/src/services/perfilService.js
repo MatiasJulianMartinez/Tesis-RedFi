@@ -373,3 +373,18 @@ export const eliminarPerfilPorId = async (id, mostrarAlerta = () => {}) => {
     throw error;
   }
 };
+
+export const actualizarPlanUsuario = async (usuarioId, nuevoPlan, nuevoRol = null) => {
+  const actualizacion = { plan: nuevoPlan };
+  if (nuevoRol) actualizacion.rol = nuevoRol;
+
+  const { error } = await supabase
+    .from("user_profiles")
+    .update(actualizacion)
+    .eq("id", usuarioId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+};
+

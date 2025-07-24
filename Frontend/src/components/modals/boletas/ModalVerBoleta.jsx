@@ -82,11 +82,17 @@ const ModalVerBoleta = ({ boleta, onClose, boletaAnterior }) => {
         </div>
 
         <div className="flex justify-center">
-          <img
-            src={boleta.url_imagen}
-            alt="Boleta"
-            className="max-h-[300px] object-contain rounded border"
-          />
+          {boleta.url_imagen ? (
+            <img
+              src={boleta.url_imagen}
+              alt="Boleta"
+              className="max-h-[300px] object-contain rounded border"
+            />
+          ) : (
+            <div className="text-center text-gray-400 italic border border-dashed p-6 rounded max-w-xs">
+              ❌ El usuario no cargó una imagen de la boleta.
+            </div>
+          )}
         </div>
       </div>
     </ModalContenedor>
